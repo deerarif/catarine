@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> -->
+    <title>Hello, world!</title>
+    <style>
+        html {
+            font-size: 0.6rem;
+            font-family: monospace;
+        }
+
+        .container-wrap {
+            /* background-color: red; */
+            /* height: 250px; */
+            height: auto;
+        }
+
+        header {
+            /* display: flex;
+            justify-content: space-evenly; */
+
+            height: 50px;
+            /* background-color: blue; */
+            /* padding: 10px; */
+        }
+
+
+
+        body {
+            padding: 0;
+            margin: 0;
+        }
+
+
+
+        .info2 {
+            float: right;
+            /* background-color: brown; */
+        }
+
+        .info {
+            float: left;
+            /* background-color: aqua; */
+            padding-top: 2px;
+            /* margin: 0px; */
+        }
+
+        .info p {
+            margin: 0;
+        }
+
+        .info2 h3 {
+            margin: 0;
+        }
+
+        table {
+            width: 100%;
+            padding-top: 10px;
+        }
+
+        table td {
+            vertical-align: top;
+            white-space: pre-line;
+        }
+
+        .info2 p {
+            margin: 0;
+        }
+
+        /* .infos {
+            padding-right: 100%;
+        } */
+
+        .table-atas-kanan {
+            max-width: 350px;
+            text-align: left;
+            /* border: solid red 1px; */
+            /* background-color: red; */
+            /* width: 600px; */
+            /* background-color: purple; */
+        }
+
+        .note {
+            font-size: 1.1rem;
+            font-weight: bolder;
+        }
+
+        .meh {
+            width: 90px;
+            /* background-color: red; */
+        }
+
+
+        .main table {
+            /* background-color: red;
+            border-top: 1px solid black; */
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .container-footer {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            /* background-color: purple; */
+            height: 60%;
+            padding-top: 10px;
+            -webkit-box-pack: space-evenly;
+            -ms-flex-pack: space-evenly;
+            justify-content: space-evenly;
+        }
+
+        .container-footer div {
+            width: 25%;
+            margin-left: 5%;
+            /* background-color: blue; */
+            border-bottom: 3px solid grey;
+        }
+
+        footer {
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-wrap">
+
+        <div class="info">
+            <p>PT Astra International Tbk 0 Honda Sales Operation
+                <br>Jl. Kh. Agus Salim No. 10
+                <br>Jl. Kh. Agus Salim No. 10
+                <br>SAMARINDA 0
+                <br>Tel 0542-875109 Fax. 0542-875139
+            </p>
+            <table class="table-atas-kanan">
+                <tr>
+                    <td class="meh">Kode Pelanggan</td>
+                    <td>:</td>
+                    <td>{{this.customerCode}}</td>
+                </tr>
+                <tr>
+                    <td>Nama Pelanggan</td>
+                    <td>:</td>
+                    <td>{{this.customerName}}</td>
+                </tr>
+                <tr>
+                    <td>Alamat Pelanggan</td>
+                    <td>:</td>
+                    <td>{{this.adress}}</td>
+                    <!-- <td>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Magnam, vel.</td> -->
+                </tr>
+
+                <tr>
+                    <td>Telepon</td>
+                    <td>:</td>
+                    <td>{{this.phone}}</td>
+                </tr>
+                <tr>
+                    <td>NPWP</td>
+                    <td>:</td>
+                    <td>{{this.Npwp}}</td>
+                </tr>
+            </table>
+            <span class="note">Catatan:</span>
+        </div>
+        <div class="info2">
+            <center>
+                <h3>SURAT JALAN</h3>
+            </center>
+            <table>
+                <tr>
+                    <td>Nomor</td>
+                    <td>:</td>
+                    <td>{{this.NomorSurat}}</td>
+                </tr>
+                <tr>
+                    <td>Tanggal</td>
+                    <td>:</td>
+                    <td>{{this.TanggalSurat}}</td>
+                </tr>
+                <tr>
+                    <td>Jam</td>
+                    <td>:</td>
+                    <td>{{this.JamSurat}}</td>
+                </tr>
+                <tr>
+                    <td>No/Tgl SAP</td>
+                    <td>:</td>
+                    <td>{{this.NotglSAP}}</td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <td class="infos" style="width: 40%;">No.Polisi</td>
+                    <td style="width: 5px;">:</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="infos">Pengemudi</td>
+                    <td style="width: 5px;">:</td>
+                    <td>-</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="main">
+        <table style="margin-top: 230px;">
+            <tr style="border-top: 1px solid black;border-bottom: 1px solid black;">
+                <th>No</th>
+                <th>Kemasan</th>
+                <th>QTY</th>
+                <th>
+                    <div>NO BTSC</div>
+                    <div>NO-STO</div>
+                </th>
+                <th>NO DUS</th>
+                <th>
+                    <div>KODE SUKU CADANG</div>
+                    <hr style="width: 70%; margin: 1px;">
+                    <div>NAMA SUKU CADANG</div>
+                </th>
+                <th>QTY</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>CL</td>
+                <td>400</td>
+                <td>klasld<br>lkdalk
+                </td>
+                <td>sdad</td>
+                <td>ioueoqueoqw9021 <br>miweb</td>
+                <td>400</td>
+            </tr>
+        </table>
+    </div>
+    <!-- <div style="background-color: red; height: 100vh;"></div> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script> -->
+</body>
+
+<!-- <footer>
+    <table style="border-bottom: 1px solid black; border-top: 1px solid black; width: 100%;">
+        <tr>
+            <td style="width: 17%;">Total QTY :</td>
+            <td style="width: auto;">400</td>
+            <td style="width: 20%;text-align: right; padding-right: 3%;">500</td>
+        </tr>
+    </table>
+</footer> -->
+
+
+
+</html>
