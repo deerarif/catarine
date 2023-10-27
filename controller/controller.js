@@ -1,4 +1,4 @@
-const { UserData, Status, Menu, sequelize } = require("./database");
+const { UserData, Status, Menu, sequelize } = require("../config/database");
 
 const adduser = async (phone_number) => {
   const results = await UserData.create({
@@ -42,4 +42,5 @@ async function findUser(number_phone, choice) {
   }
 }
 
+//gambil data ke data base untuk genrate invoice
 module.exports = { findUser };

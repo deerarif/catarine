@@ -1,8 +1,8 @@
 const express = require("express");
 const axios = require("axios");
 const bodyParser = require("body-parser");
-const { Main, sendFonnte, getAllstatus } = require("./model");
-const { findUser } = require("./controller");
+const { Main, sendFonnte, getAllstatus, InvoiceHandler } = require("./model");
+const { findUser } = require("./controller/controller");
 const app = express();
 const port = 8080;
 
@@ -10,6 +10,7 @@ app.use(bodyParser.json());
 app.get("/", (reg, res) => {
   res.status(200).send("ok");
 });
+app.use(express.static("public"));
 
 function stringifyData(data) {
   const stringifiedItems = data
@@ -27,6 +28,15 @@ app.post("/", async (req, res) => {
     findUser(sender, 1);
     let id_Barang = message.trim().split(" ").slice(-1)[0];
     Main(id_Barang, res, sender);
+  } else if (message.toLowerCase().includes("invoice" && "buat")) {
+    //panggil invoice handler dari Model
+    const data = message; // nanti pemprosessan data disini apa saja yang jadi key pemprosessan data
+    try {
+      InvoiceHandler(data, res);
+    } catch (err) {
+      console.error("Error handling request:", error.message);
+      res.status(500).json({ error: "Internal server error" });
+    }
   } else if (message === "!Dashboard") {
     try {
       const pesan = await getAllstatus().then((data) => {

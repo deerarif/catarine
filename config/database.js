@@ -1,10 +1,15 @@
 const { Sequelize, DataTypes, DATE } = require("sequelize");
-
+require("dotenv").config();
 // Create a Sequelize instance and specify the database connection details
-const sequelize = new Sequelize("catarine", "root", "satuduatiga", {
-  host: "192.168.0.13", // Change this to your MySQL host
-  dialect: "mysql",
-});
+const sequelize = new Sequelize(
+  "catarine",
+  process.env.MYSQL_USERNAME,
+  process.env.MYSQL_PASSWD,
+  {
+    host: process.env.MYSQL_HOST, // Change this to your MySQL host
+    dialect: "mysql",
+  }
+);
 
 // Define the "Stock" model that corresponds to the existing table
 const Stock = sequelize.define(

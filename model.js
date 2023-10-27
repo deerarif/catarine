@@ -1,5 +1,7 @@
-const { Stock, sequelize } = require("./database");
+const { Stock, sequelize } = require("./config/database");
 const { QueryTypes } = require("sequelize");
+const { Makeinvoice } = require("./helpers/pdf");
+
 const axios = require("axios");
 async function sendFonnte(target, messageData) {
   const requestData = {
@@ -52,6 +54,7 @@ async function getAllstatus() {
     "SELECT Menu.Nama as Menu, COUNT(Status.menu_id) as Total FROM Menu LEFT JOIN Status ON Status.menu_id = Menu.menu_id GROUP BY Menu.menu_id; ",
     { type: QueryTypes.SELECT }
   );
+  sequelize.close();
   return data;
 }
 async function getData(data) {
@@ -72,6 +75,7 @@ async function getData(data) {
       const concatenatedString = generateConcatenatedString(dataValues);
 
       // Log the processed string
+      sequelize.close();
       return concatenatedString;
     } else {
       return "Tidak ada data yang ditemukan\nKemungkinan ID yang anda masukkan salah";
@@ -93,4 +97,21 @@ async function Main(id_barang, res, sender) {
   }
 }
 
-module.exports = { Main, sendFonnte, getAllstatus };
+//get data untuk generate pdf funtion generate pdfnya di conroller
+//key dapat di index.js tapi data buat generate dari controller
+//kemudian ngoper data ke function helper pdf
+async function InvoiceHandler(data, res) {
+  try {
+    const link = await Makeinvoice(data);
+    const fonnteResponse = await sendFonnte(sender, {
+      message: "Invoice Hasbeen generated", //ini sementara
+      url: link,
+      filename: "Invoice", //nama file juga sementara
+    });
+    res.status(200).send("ok");
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+}
+module.exports = { Main, sendFonnte, getAllstatus, InvoiceHandler };
