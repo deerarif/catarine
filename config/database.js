@@ -1,53 +1,13 @@
-const { Sequelize, DataTypes, DATE } = require("sequelize");
+const { Sequelize, DataTypes, DATE, STRING } = require("sequelize");
 require("dotenv").config();
 // Create a Sequelize instance and specify the database connection details
 const sequelize = new Sequelize(
-  "catarine",
+  process.env.DB_NAME,
   process.env.MYSQL_USERNAME,
   process.env.MYSQL_PASSWD,
   {
-    host: process.env.MYSQL_HOST, // Change this to your MySQL host
+    host: process.env.MYSQL_HOST,
     dialect: "mysql",
-  }
-);
-
-// Define the "Stock" model that corresponds to the existing table
-const Stock = sequelize.define(
-  "Stock",
-  {
-    index: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
-      primaryKey: true, // Define the primary key if necessary
-    },
-    Input: {
-      type: DataTypes.TEXT,
-    },
-    Ket: {
-      type: DataTypes.TEXT,
-    },
-    OH: {
-      type: DataTypes.TEXT,
-    },
-    902: {
-      type: DataTypes.TEXT,
-    },
-    900: {
-      type: DataTypes.TEXT,
-    },
-    HET: {
-      type: DataTypes.TEXT,
-    },
-    "STD DUS": {
-      type: DataTypes.BIGINT,
-    },
-    Respon: {
-      type: DataTypes.TEXT,
-    },
-  },
-  {
-    tableName: "Stock", // Specify the table name that already exists
-    timestamps: false, // Set this to false if the table doesn't have timestamp columns
   }
 );
 const UserData = sequelize.define(
@@ -66,8 +26,8 @@ const UserData = sequelize.define(
     },
   },
   {
-    tableName: "UserData", // Specify the table name that already exists
-    timestamps: false, // Set this to false if the table doesn't have timestamp columns
+    tableName: "UserData",
+    timestamps: false,
   }
 );
 const Menu = sequelize.define(
@@ -85,17 +45,30 @@ const Menu = sequelize.define(
     },
   },
   {
-    tableName: "Menu", // Specify the table name that already exists
-    timestamps: false, // Set this to false if the table doesn't have timestamp columns
+    tableName: "Menu",
+    timestamps: false,
   }
 );
 const Status = sequelize.define(
   "Status",
   {
-    // You may add additional fields if needed
-    // Date: {
-    //   type: Date,
-    // },
+    UserID: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: UserData,
+        key: "UserID",
+      },
+    },
+    menu_id: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: Menu,
+        key: "menu_id",
+      },
+    },
+    Date: {
+      type: DataTypes.DATE,
+    },
   },
   {
     tableName: "Status",
@@ -103,9 +76,119 @@ const Status = sequelize.define(
   }
 );
 
-// Define the associations for the many-to-many relationship
-UserData.belongsToMany(Menu, { through: Status, foreignKey: "UserID" });
-Menu.belongsToMany(UserData, { through: Status, foreignKey: "menu_id" });
+const Dealer = sequelize.define(
+  "DataDealer",
+  {
+    Kode_Dealer: {
+      type: DataTypes.STRING,
+      primaryKey: true,
+      allowNull: false,
+    },
+    Nama_Dealer: {
+      type: DataTypes.STRING,
+    },
+    NoHP: {
+      type: DataTypes.STRING,
+    },
+  },
+  {
+    tableName: "DataDealer",
+    timestamps: false,
+  }
+);
 
-// Export the Stock model to use it elsewhere in your application
-module.exports = { Stock, UserData, Status, Menu, sequelize };
+const Barang = sequelize.define(
+  "Barang",
+  {
+    Kode_Barang: {
+      type: DataTypes.STRING,
+      primaryKey: true,
+      unique: false,
+      allowNull: false,
+    },
+    Nama_Barang: {
+      type: DataTypes.STRING, // Use DataTypes.STRING instead of DataTypes.TEXT
+    },
+    Harga_Barang: {
+      type: DataTypes.STRING, // Assuming Harga is a numeric value
+    },
+  },
+  {
+    tableName: "Barang",
+    timestamps: false,
+  }
+);
+
+const Stocks = sequelize.define(
+  "Stock_Barang",
+  {
+    Kode_Barang: {
+      type: DataTypes.STRING,
+      primaryKey: true,
+    },
+    Stock_902: {
+      type: DataTypes.TEXT,
+    },
+    Stock_900: {
+      type: DataTypes.TEXT,
+    },
+    "STD DUS": {
+      type: DataTypes.STRING,
+    },
+    Respon: {
+      type: DataTypes.TEXT,
+    },
+  },
+  {
+    tableName: "Stock_Barang",
+    timestamps: false,
+  }
+);
+
+const Orderan = sequelize.define(
+  "Order",
+  {
+    Nomer_Orderan: {
+      type: DataTypes.STRING,
+      primaryKey: true,
+      allowNull: false,
+    },
+    Kode_Dealer: {
+      type: DataTypes.STRING,
+    },
+    Material: {
+      type: DataTypes.STRING,
+    },
+    Quantity: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+  },
+  {
+    tableName: "Order",
+    timestamps: false,
+  }
+);
+
+Orderan.belongsTo(Barang, {
+  foreignKey: "Material",
+  targetKey: "Kode_Barang",
+  as: "Barang", // You can use this alias when querying
+});
+
+// Association between Barang and Stock_Barang
+Barang.hasOne(Stocks, {
+  foreignKey: "Kode_Barang",
+  sourceKey: "Kode_Barang",
+  as: "Stock", // You can use this alias when querying
+});
+
+// Association between Order and DataDealer
+Orderan.belongsTo(Dealer, {
+  foreignKey: "Kode_Dealer",
+  targetKey: "Kode_Dealer",
+  as: "Dealer", // You can use this alias when querying
+});
+// Stocks.hasOne(Barang, { foreignKey: "Kode_Barang" });
+// Dealer.hasMany(Orderan, { foreignKey: "Kode_Dealer" });
+module.exports = { Stocks, UserData, Status, Menu, sequelize };

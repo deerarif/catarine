@@ -18,10 +18,10 @@ function Makeinvoice(data) {
       contents: {
         default: "",
         last:
-          '<footer style="height: 100%;"><table style="font-size:1rem;border-bottom: 1px solid black; border-top: 1px solid black; width: 100%;"><tr><td style="width: 17%;">Total QTY :</td><td style="width: auto;">' +
-          data.QTY +
-          '</td><td style="width: 20%;text-align: right; padding-right: 3%;">' +
-          data.QTY +
+          '<footer style="height: 100%;"><table style="text-align: center; font-size:1rem;border-bottom: 1px solid black; border-top: 1px solid black; width: 100%;"><tr><td style="text-align: left; padding-left: 10px;">Total QTY :</td><td style="width: 26.6%; text-align: end; font-weight: bold;"> ' +
+          data["QTY"] +
+          ' </td><td style="text-align: end; padding-right: 8%; ">Total Harga :</td><td style="text-align: end; padding-right: 8.3%; font-weight: bold;">' +
+          data["QTY"] +
           "</td></tr></table></footer>",
       },
     },
