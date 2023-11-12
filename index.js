@@ -61,24 +61,32 @@ app.post("/", async (req, res) => {
       message: "Untuk cek stok ikutin tutorial diatas ya kakak!",
       url: "https://catherine-hso-kaltim-2.online/CekStok.png",
       filename: "Tutorial Cek Stock",
+    }).then((res) => {
+      res.status(200).send("ok");
     });
   } else if (message.toLowerCase().includes("help" && "2")) {
     sendFonnte(sender, {
       message: "Untuk Mencetak invoice ikutin tutorial diatas ya kakak!",
       url: "https://catherine-hso-kaltim-2.online/CekInvoice.png",
       filename: "Tutorial Cetak Invoice",
+    }).then((res) => {
+      res.status(200).send("ok");
     });
   } else if (message.toLowerCase().includes("help" && "3")) {
     sendFonnte(sender, {
       message: "Untuk mengecek claim ikutin tutorial diatas ya kakak!",
       url: "https://catherine-hso-kaltim-2.online/CekClaim.png",
       filename: "Tutorial Claim",
+    }).then((res) => {
+      res.status(200).send("ok");
     });
   } else if (message.toLowerCase().includes("help" && "4")) {
     sendFonnte(sender, {
       message: "Untuk mengecek hotline ikutin tutorial diatas ya kakak!",
       url: "https://catherine-hso-kaltim-2.online/CekHotline.png",
       filename: "Tutorial Hotline",
+    }).then((res) => {
+      res.status(200).send("ok");
     });
   } else if (message === "!Dashboard") {
     try {
