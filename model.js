@@ -1,6 +1,7 @@
-const { Stock, sequelize } = require("./config/database");
+const { Stocks, sequelize, Tanggal_data } = require("./config/database");
 const { QueryTypes } = require("sequelize");
 const { Makeinvoice } = require("./helpers/pdf");
+const { GetInvoiceData } = require("./controller/controller");
 
 const axios = require("axios");
 async function sendFonnte(target, messageData) {
@@ -17,7 +18,7 @@ async function sendFonnte(target, messageData) {
       requestData,
       {
         headers: {
-          Authorization: "NIyTHUqeuLs09T!GwMIv", // Replace 'TOKEN' with your actual authorization token
+          Authorization: "y0zrwc51FnYyUhdsI-zh", // Replace 'TOKEN' with your actual authorization token
         },
       }
     );
@@ -35,18 +36,24 @@ function formatRupiah(number) {
   return formatting;
 }
 function generateConcatenatedString(data) {
-  return `Kode & Nama Barang: ${data["Input"]} - ${
-    data["Ket"]
-  }\nHarga: ${formatRupiah(data["HET"])}\nQty per Dus : ${
-    data["STD DUS"]
-  } pcs\n${data["Respon"]}\nUpdated : ${data["Date"].toLocaleDateString(
-    "en-US",
-    {
-      year: "numeric",
-      month: "short",
-      day: "2-digit",
-    }
-  )}`;
+  const {
+    Kode_Barang,
+    Nama_Barang,
+    Harga_Barang,
+    QTY_Dus_Barang,
+    Status_Barang,
+    Dates,
+  } = data;
+
+  const formattedDate = new Date(Dates).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+  });
+
+  const concatenatedString = `${Kode_Barang} - ${Nama_Barang}\n| HET: Rp.${Harga_Barang.toLocaleString()}\n| Qty per Dus : ${QTY_Dus_Barang} pcs\n| ${Status_Barang}\nUpdated : ${formattedDate}`;
+
+  return concatenatedString;
 }
 
 async function getAllstatus() {
@@ -54,28 +61,27 @@ async function getAllstatus() {
     "SELECT Menu.Nama as Menu, COUNT(Status.menu_id) as Total FROM Menu LEFT JOIN Status ON Status.menu_id = Menu.menu_id GROUP BY Menu.menu_id; ",
     { type: QueryTypes.SELECT }
   );
-  sequelize.close();
   return data;
 }
 async function getData(data) {
   try {
-    // Query a single record from the "Stock" table by the "Input" column
-    const inputData = await Stock.findOne({
+    // Query a single record from the "Stocks" table by the "Input" column
+    const inputData = await Stocks.findOne({
       where: {
-        Input: data, // Replace with the input value you're searching for
+        Kode_Barang: data, // Replace with the input value you're searching for
       },
     });
+    const Date_Data = await Tanggal_data.findOne();
     if (inputData) {
       // Store the dataValues in a variable
       const dataValues = {
         ...inputData.dataValues,
-        Date: new Date(),
+        Dates: Date_Data.dataValues["Data_Updated_at"],
       };
       // Process the data using the generateConcatenatedString function
       const concatenatedString = generateConcatenatedString(dataValues);
 
       // Log the processed string
-      sequelize.close();
       return concatenatedString;
     } else {
       return "Tidak ada data yang ditemukan\nKemungkinan ID yang anda masukkan salah";
@@ -97,21 +103,23 @@ async function Main(id_barang, res, sender) {
   }
 }
 
-//get data untuk generate pdf funtion generate pdfnya di conroller
-//key dapat di index.js tapi data buat generate dari controller
-//kemudian ngoper data ke function helper pdf
-async function InvoiceHandler(data, res) {
+/*
+Pertama Ambil Data key yang di proses di index.js
+Kedua Ambil data dari database yang sudah di prosee
+Ketiga generate invoice pakai data tsb
+*/
+async function InvoiceHandler(data, res, sender) {
   try {
-    const link = await Makeinvoice(data);
+    const getdata = await GetInvoiceData(data);
+    const link = await Makeinvoice(getdata);
     const fonnteResponse = await sendFonnte(sender, {
-      message: "Invoice Hasbeen generated", //ini sementara
+      message: "Invoice Hasbeen generated " + link, //ini sementara
       url: link,
       filename: "Invoice", //nama file juga sementara
     });
     res.status(200).send("ok");
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Internal server error" });
+    throw err;
   }
 }
-module.exports = { Main, sendFonnte, getAllstatus, InvoiceHandler };
+module.exports = { Main, sendFonnte, getAllstatus, InvoiceHandler, getData };

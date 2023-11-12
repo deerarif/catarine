@@ -1,17 +1,11 @@
-// const { getAllstatus } = require("./model");
+const { getData } = require("./model");
 
-// getAllstatus()
-//   .then((res) => console.log(res))
-//   .catch((err) => console.log(err));
-const Makeinvoice = require("./helpers/pdf");
-const dafay = require("./helpers/data");
-
-function Main() {
+async function Meh(data) {
   try {
-    Makeinvoice(dafay);
+    const res = await getData(data);
+    console.log(res);
   } catch (err) {
     console.log(err);
   }
 }
-Main();
-// console.log(data.QTY);
+Meh("HC25H88L");

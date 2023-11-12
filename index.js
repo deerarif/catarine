@@ -28,11 +28,16 @@ app.post("/", async (req, res) => {
     findUser(sender, 1);
     let id_Barang = message.trim().split(" ").slice(-1)[0];
     Main(id_Barang, res, sender);
-  } else if (message.toLowerCase().includes("invoice" && "buat")) {
+  } else if (message.toLowerCase().includes("buat" && "invoice")) {
+    console.log(message);
     //panggil invoice handler dari Model
-    const data = message; // nanti pemprosessan data disini apa saja yang jadi key pemprosessan data
+    const key_value = message.trim().split(" ");
+    const data = {
+      Kode: key_value[key_value.length - 2],
+      Tgl: new Date(key_value[key_value.length - 1]),
+    };
     try {
-      InvoiceHandler(data, res);
+      InvoiceHandler(data, res, sender);
     } catch (err) {
       console.error("Error handling request:", error.message);
       res.status(500).json({ error: "Internal server error" });

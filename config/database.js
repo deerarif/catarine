@@ -52,21 +52,7 @@ const Menu = sequelize.define(
 const Status = sequelize.define(
   "Status",
   {
-    UserID: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: UserData,
-        key: "UserID",
-      },
-    },
-    menu_id: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: Menu,
-        key: "menu_id",
-      },
-    },
-    Date: {
+    Waktu: {
       type: DataTypes.DATE,
     },
   },
@@ -76,66 +62,36 @@ const Status = sequelize.define(
   }
 );
 
-const Dealer = sequelize.define(
-  "DataDealer",
+const Tanggal_data = sequelize.define(
+  "Tanggal_Data",
   {
-    Kode_Dealer: {
-      type: DataTypes.STRING,
+    Data_Updated_at: {
+      type: DataTypes.DATE,
       primaryKey: true,
-      allowNull: false,
-    },
-    Nama_Dealer: {
-      type: DataTypes.STRING,
-    },
-    NoHP: {
-      type: DataTypes.STRING,
     },
   },
   {
-    tableName: "DataDealer",
+    tableName: "Tanggal_Data",
     timestamps: false,
   }
 );
-
-const Barang = sequelize.define(
-  "Barang",
-  {
-    Kode_Barang: {
-      type: DataTypes.STRING,
-      primaryKey: true,
-      unique: false,
-      allowNull: false,
-    },
-    Nama_Barang: {
-      type: DataTypes.STRING, // Use DataTypes.STRING instead of DataTypes.TEXT
-    },
-    Harga_Barang: {
-      type: DataTypes.STRING, // Assuming Harga is a numeric value
-    },
-  },
-  {
-    tableName: "Barang",
-    timestamps: false,
-  }
-);
-
 const Stocks = sequelize.define(
   "Stock_Barang",
   {
     Kode_Barang: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(20),
       primaryKey: true,
     },
-    Stock_902: {
+    Nama_Barang: {
       type: DataTypes.TEXT,
     },
-    Stock_900: {
-      type: DataTypes.TEXT,
+    Harga_Barang: {
+      type: DataTypes.BIGINT,
     },
-    "STD DUS": {
-      type: DataTypes.STRING,
+    QTY_Dus_Barang: {
+      type: DataTypes.BIGINT,
     },
-    Respon: {
+    Status_Barang: {
       type: DataTypes.TEXT,
     },
   },
@@ -146,49 +102,51 @@ const Stocks = sequelize.define(
 );
 
 const Orderan = sequelize.define(
-  "Order",
+  "Orderan",
   {
-    Nomer_Orderan: {
-      type: DataTypes.STRING,
-      primaryKey: true,
-      allowNull: false,
-    },
     Kode_Dealer: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(25),
+      primaryKey: true,
     },
-    Material: {
-      type: DataTypes.STRING,
+    Tanggal_Order: {
+      type: DataTypes.DATE,
+    },
+
+    Kode_Barang: {
+      type: DataTypes.STRING(20),
+    },
+    Nama_Barang: {
+      type: DataTypes.TEXT,
     },
     Quantity: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
+      type: DataTypes.BIGINT,
+    },
+    Harga_Barang: {
+      type: DataTypes.BIGINT,
+    },
+    Diskon: {
+      type: DataTypes.DOUBLE,
+    },
+    Total: {
+      type: DataTypes.BIGINT,
     },
   },
   {
-    tableName: "Order",
+    tableName: "Orderan",
     timestamps: false,
   }
 );
 
-Orderan.belongsTo(Barang, {
-  foreignKey: "Material",
-  targetKey: "Kode_Barang",
-  as: "Barang", // You can use this alias when querying
-});
-
-// Association between Barang and Stock_Barang
-Barang.hasOne(Stocks, {
-  foreignKey: "Kode_Barang",
-  sourceKey: "Kode_Barang",
-  as: "Stock", // You can use this alias when querying
-});
-
-// Association between Order and DataDealer
-Orderan.belongsTo(Dealer, {
-  foreignKey: "Kode_Dealer",
-  targetKey: "Kode_Dealer",
-  as: "Dealer", // You can use this alias when querying
-});
+UserData.belongsToMany(Menu, { through: Status, foreignKey: "UserID" });
+Menu.belongsToMany(UserData, { through: Status, foreignKey: "menu_id" });
 // Stocks.hasOne(Barang, { foreignKey: "Kode_Barang" });
 // Dealer.hasMany(Orderan, { foreignKey: "Kode_Dealer" });
-module.exports = { Stocks, UserData, Status, Menu, sequelize };
+module.exports = {
+  Stocks,
+  UserData,
+  Status,
+  Menu,
+  sequelize,
+  Orderan,
+  Tanggal_data,
+};

@@ -1,5 +1,6 @@
 const pdf = require("pdf-creator-node");
 const fs = require("fs");
+const { Rupiah } = require("../controller/controller");
 
 // Read the HTML template
 const templateHtml = fs.readFileSync("assets/template.html", "utf8");
@@ -19,14 +20,13 @@ function Makeinvoice(data) {
         default: "",
         last:
           '<footer style="height: 100%;"><table style="text-align: center; font-size:1rem;border-bottom: 1px solid black; border-top: 1px solid black; width: 100%;"><tr><td style="text-align: left; padding-left: 10px;">Total QTY :</td><td style="width: 26.6%; text-align: end; font-weight: bold;"> ' +
-          data["QTY"] +
+          data["QTY_Total"] +
           ' </td><td style="text-align: end; padding-right: 8%; ">Total Harga :</td><td style="text-align: end; padding-right: 8.3%; font-weight: bold;">' +
-          data["QTY"] +
-          "</td></tr></table></footer>",
+          Rupiah.format(data["Harga_Total"]).replace(/\,00$/, ",-") +
+          '</td></tr></table><h6 style="text-align: right;">*Cost Amount include discount and tax.</h6></footer>',
       },
     },
   };
-
   // Create a document using the template and data
   const document = {
     html: templateHtml,
@@ -37,7 +37,6 @@ function Makeinvoice(data) {
   pdf.create(document, options).catch((error) => {
     console.error(error);
   });
-  return "https://catarine.com/pulic/" + filename;
+  return "https://catarine.com/public/" + filename;
 }
-
-module.exports = Makeinvoice;
+module.exports = { Makeinvoice };
