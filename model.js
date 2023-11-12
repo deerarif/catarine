@@ -109,17 +109,19 @@ Kedua Ambil data dari database yang sudah di prosee
 Ketiga generate invoice pakai data tsb
 */
 async function InvoiceHandler(data, res, sender) {
-  try {
-    const getdata = await GetInvoiceData(data);
-    const link = await Makeinvoice(getdata);
-    const fonnteResponse = await sendFonnte(sender, {
-      message: "Invoice Hasbeen generated " + link, //ini sementara
-      url: link,
-      filename: "Invoice", //nama file juga sementara
+  GetInvoiceData(data)
+    .then((data) => {
+      return Makeinvoice(data);
+    })
+    .then((link) =>
+      sendFonnte(sender, {
+        message: "Invoice Hasbeen generated " + link, //ini sementara
+        url: link,
+        filename: "Invoice", //nama file juga sementara
+      })
+    )
+    .catch((err) => {
+      throw err;
     });
-    res.status(200).send("ok");
-  } catch (err) {
-    throw err;
-  }
 }
 module.exports = { Main, sendFonnte, getAllstatus, InvoiceHandler, getData };

@@ -56,6 +56,13 @@ app.post("/", async (req, res) => {
       console.error("Error handling request:", error.message);
       res.status(500).json({ error: "Internal server error" });
     }
+  } else if (message === "halim") {
+    const fonnteResponse = await sendFonnte(sender, {
+      message: "yes i am working",
+      url: "https://filesamples.com/samples/image/jpg/sample_640%C3%97426.jpg",
+    });
+    console.log(fonnteResponse);
+    res.status(200).send("ok");
   } else {
     try {
       const fonnteResponse = await sendFonnte(sender, {
