@@ -21,10 +21,10 @@ bf.rename(columns={'P/N SAP':'Kode_Barang'}, inplace=True)
 tanggal = datetime.now().strftime('%Y-%m-%d')
 tgl = pd.DataFrame(data={"Data_Updated_at":[tanggal]})
 
-server = '192.168.0.13'
-database = 'test_db'
-username = 'root'
-password = 'satuduatiga'
+server = '127.0.0.1'
+database = 'Catherine'
+username = 'Catherine'
+password = 'Samarinda12309'
 database_connection = sqlalchemy.create_engine('mysql+mysqlconnector://{0}:{1}@{2}/{3}'.
                                                format(username, password,
                                                       server, database))
@@ -32,7 +32,7 @@ database_connection = sqlalchemy.create_engine('mysql+mysqlconnector://{0}:{1}@{
 Stocks_Barang.to_sql("Stock_Barang", database_connection,if_exists='replace',index=False,dtype={
     "Kode_Barang":sqlalchemy.types.String(20)
 })
-tgl.to_sql("Taggal_Data", database_connection,if_exists='replace',index=False,dtype={
+tgl.to_sql("Tanggal_Data", database_connection,if_exists='replace',index=False,dtype={
     "Data_Updated_at":sqlalchemy.types.Date
 })
 Data_Order.to_sql("Orderan", database_connection,if_exists='replace',index=False,dtype={

@@ -37,6 +37,6 @@ function Makeinvoice(data) {
   pdf.create(document, options).catch((error) => {
     console.error(error);
   });
-  return "https://catherine-hso-kaltim-2.online/public/" + filename;
+  return "https://catherine-hso-kaltim-2.online/" + filename;
 }
 module.exports = { Makeinvoice };

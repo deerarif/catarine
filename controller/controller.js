@@ -1,4 +1,11 @@
-const { UserData, Status, sequelize, Orderan } = require("../config/database");
+const {
+  UserData,
+  Status,
+  sequelize,
+  Orderan,
+  Claim,
+  Hotline,
+} = require("../config/database");
 const { Op } = require("sequelize");
 
 /*Function Necessary */
@@ -78,6 +85,32 @@ async function findUser(number_phone, choice) {
   }
 }
 
+async function getClaimData(id_claim) {
+  try {
+    const res = await Claim.findOne({
+      where: {
+        Input: id_claim,
+      },
+    });
+    return res.dataValues;
+  } catch (err) {
+    throw err;
+  }
+}
+
+async function getHotlineData(id_Hotline) {
+  try {
+    const res = await Hotline.findOne({
+      where: {
+        Input: id_Hotline,
+      },
+    });
+    return res.dataValues;
+  } catch (err) {
+    throw err;
+  }
+}
+
 //gambil data ke data base untuk genrate invoice
 async function GetInvoiceData(data) {
   const { Kode, Tgl } = data;
@@ -128,4 +161,10 @@ async function GetInvoiceData(data) {
   }
 }
 
-module.exports = { findUser, Rupiah, GetInvoiceData };
+module.exports = {
+  findUser,
+  Rupiah,
+  GetInvoiceData,
+  getClaimData,
+  getHotlineData,
+};

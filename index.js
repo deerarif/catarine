@@ -1,7 +1,14 @@
 const express = require("express");
 const axios = require("axios");
 const bodyParser = require("body-parser");
-const { Main, sendFonnte, getAllstatus, InvoiceHandler } = require("./model");
+const {
+  Main,
+  sendFonnte,
+  getAllstatus,
+  InvoiceHandler,
+  ClaimHandler,
+  HotlineHandler,
+} = require("./model");
 const { findUser } = require("./controller/controller");
 const app = express();
 const port = 8080;
@@ -29,7 +36,6 @@ app.post("/", async (req, res) => {
     let id_Barang = message.trim().split(" ").slice(-1)[0];
     Main(id_Barang, res, sender);
   } else if (message.toLowerCase().includes("buat" && "invoice")) {
-    console.log(message);
     //panggil invoice handler dari Model
     const key_value = message.trim().split(" ");
     const data = {
@@ -42,6 +48,14 @@ app.post("/", async (req, res) => {
       console.error("Error handling request:", error.message);
       res.status(500).json({ error: "Internal server error" });
     }
+  } else if (message.toLowerCase().includes("claim")) {
+    findUser(sender, 3);
+    let id_Claim = message.trim().split(" ").slice(-1)[0];
+    ClaimHandler(id_Claim, res, sender);
+  } else if (message.toLowerCase().includes("hotline")) {
+    findUser(sender, 4);
+    let id_Claim = message.trim().split(" ").slice(-1)[0];
+    HotlineHandler(id_Claim, res, sender);
   } else if (message === "!Dashboard") {
     try {
       const pesan = await getAllstatus().then((data) => {
@@ -56,18 +70,11 @@ app.post("/", async (req, res) => {
       console.error("Error handling request:", error.message);
       res.status(500).json({ error: "Internal server error" });
     }
-  } else if (message === "halim") {
-    const fonnteResponse = await sendFonnte(sender, {
-      message: "yes i am working",
-      url: "https://filesamples.com/samples/image/jpg/sample_640%C3%97426.jpg",
-    });
-    console.log(fonnteResponse);
-    res.status(200).send("ok");
   } else {
     try {
       const fonnteResponse = await sendFonnte(sender, {
         message:
-          "Salam Satu Hati.\nMakasih Om, Tante, Kaka, Koko & Cici yang sudah menghubungi Astra Motor Kaltim 2, Main Distributor HGP & AHM Oil Wilayah Kalimantan Timur.\nPerkenalkan saya CATHERINE (Customer Share Digital & Information Centre spesial buat bantu pelanggan HGP).\nUntuk Mengecek barang bisa mengirim pesan \ncek id_barang",
+          '*Pesan Otomatis*\nHalo. Salam Satu Hati. \nCATHERINE bisa bantu apa hari ini?\n1. Cek Stok (ketik "cek + Part Number")\n2. Buat Invoice (ketik "invoice + Nomor Dealer/Toko + Tahun-Bulan-Tanggal")\n3. Lacak pengajuan Klaim Sparepart (ketik "Claim + C3 + Nomor Dealer/Toko + Part Number")\n4. Cek Hotline Order (ketik "hotline + Nomor PO Hotline")\n5. Help\n\n*Noted* : Jika Catherine tidak membalas bisa mengetik Help + Nomor Menu (Contoh: Help 1)\nTanda + disetetiap menu tidak perlu ditulis',
       });
       res.status(200).json(fonnteResponse);
     } catch (error) {

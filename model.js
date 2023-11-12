@@ -1,8 +1,12 @@
 const { Stocks, sequelize, Tanggal_data } = require("./config/database");
 const { QueryTypes } = require("sequelize");
 const { Makeinvoice } = require("./helpers/pdf");
-const { GetInvoiceData } = require("./controller/controller");
-
+const {
+  GetInvoiceData,
+  getClaimData,
+  getHotlineData,
+} = require("./controller/controller");
+require("dotenv").config();
 const axios = require("axios");
 async function sendFonnte(target, messageData) {
   const requestData = {
@@ -18,7 +22,7 @@ async function sendFonnte(target, messageData) {
       requestData,
       {
         headers: {
-          Authorization: "y0zrwc51FnYyUhdsI-zh", // Replace 'TOKEN' with your actual authorization token
+          Authorization: process.env.TOKEN, // Replace 'TOKEN' with your actual authorization token
         },
       }
     );
@@ -90,6 +94,32 @@ async function getData(data) {
     console.error("Error querying data:", error);
   }
 }
+async function ClaimHandler(id_Claim, res, sender) {
+  const { Respons } = await getClaimData(id_Claim);
+  try {
+    const fonnteResponse = await sendFonnte(sender, {
+      message: Respons,
+    });
+    res.status(200).send("ok");
+  } catch (error) {
+    console.error("Error handling request:", error.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+}
+
+async function HotlineHandler(id_Hotline, res, sender) {
+  const { Respons } = await getHotlineData(id_Hotline);
+  try {
+    const fonnteResponse = await sendFonnte(sender, {
+      message: Respons,
+    });
+    res.status(200).send("ok");
+  } catch (error) {
+    console.error("Error handling request:", error.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+}
+
 async function Main(id_barang, res, sender) {
   const result = await getData(id_barang);
   try {
@@ -124,4 +154,12 @@ async function InvoiceHandler(data, res, sender) {
       throw err;
     });
 }
-module.exports = { Main, sendFonnte, getAllstatus, InvoiceHandler, getData };
+module.exports = {
+  Main,
+  sendFonnte,
+  getAllstatus,
+  InvoiceHandler,
+  getData,
+  ClaimHandler,
+  HotlineHandler,
+};

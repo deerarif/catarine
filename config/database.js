@@ -61,7 +61,34 @@ const Status = sequelize.define(
     timestamps: false,
   }
 );
-
+const Hotline = sequelize.define(
+  "Hotline",
+  {
+    Input: {
+      type: DataTypes.STRING(50),
+      primaryKey: true,
+    },
+    Respons: DataTypes.TEXT,
+  },
+  {
+    tableName: "Hotline",
+    timestamps: false,
+  }
+);
+const Claim = sequelize.define(
+  "Claim",
+  {
+    Input: {
+      type: DataTypes.STRING(50),
+      primaryKey: true,
+    },
+    Respons: DataTypes.TEXT,
+  },
+  {
+    tableName: "Claim",
+    timestamps: false,
+  }
+);
 const Tanggal_data = sequelize.define(
   "Tanggal_Data",
   {
@@ -149,4 +176,6 @@ module.exports = {
   sequelize,
   Orderan,
   Tanggal_data,
+  Claim,
+  Hotline,
 };
