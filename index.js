@@ -56,6 +56,30 @@ app.post("/", async (req, res) => {
     findUser(sender, 4);
     let id_Claim = message.trim().split(" ").slice(-1)[0];
     HotlineHandler(id_Claim, res, sender);
+  } else if (message.toLowerCase().includes("help" && "1")) {
+    sendFonnte(sender, {
+      message: "Untuk cek stok ikutin tutorial diatas ya kakak!",
+      url: "https://catherine-hso-kaltim-2.online/CekStok.png",
+      filename: "Tutorial Cek Stock",
+    });
+  } else if (message.toLowerCase().includes("help" && "2")) {
+    sendFonnte(sender, {
+      message: "Untuk Mencetak invoice ikutin tutorial diatas ya kakak!",
+      url: "https://catherine-hso-kaltim-2.online/CekInvoice.png",
+      filename: "Tutorial Cetak Invoice",
+    });
+  } else if (message.toLowerCase().includes("help" && "3")) {
+    sendFonnte(sender, {
+      message: "Untuk mengecek claim ikutin tutorial diatas ya kakak!",
+      url: "https://catherine-hso-kaltim-2.online/CekClaim.png",
+      filename: "Tutorial Claim",
+    });
+  } else if (message.toLowerCase().includes("help" && "4")) {
+    sendFonnte(sender, {
+      message: "Untuk mengecek hotline ikutin tutorial diatas ya kakak!",
+      url: "https://catherine-hso-kaltim-2.online/CekHotline.png",
+      filename: "Tutorial Hotline",
+    });
   } else if (message === "!Dashboard") {
     try {
       const pesan = await getAllstatus().then((data) => {
